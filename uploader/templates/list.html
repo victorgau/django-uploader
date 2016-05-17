@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>Minimal Django File Upload Example</title>
+        <style>
+            .hideImage {display: none}
+            .showImage {display: block}
+        </style>
+    </head>
+
+    <body>
+    <!-- Upload form. Note enctype attribute! -->
+        <form action="{% url "list" %}" method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            <p>{{ form.non_field_errors }}</p>
+
+            <p>{{ form.imagefile.label_tag }} {{ form.imagefile.help_text }}</p>
+
+            <p>
+                {{ form.imgefile.errors }}
+                {{ form.imagefile }}
+            </p>
+
+            <img id="img" src="#" style="width:320px" alt="your image" class="hideImage"/>
+
+            <p><input type="submit" value="Upload"/></p>
+        </form>
+
+        <!-- List of uploaded documents -->
+        {% if photos %}
+            <ul>
+                {% for photo in photos %}
+                    <li><a href="{{ photo.imagefile.url }}">{{ photo.imagefile.name }}</a></li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p>No photos.</p>
+        {% endif %}
+
+ <script src="https://code.jquery.com/jquery-1.12.3.min.js" integrity="sha256-aaODHAgvwQW1bFOGXMeX+pC4PZIPsvn2h1sArYOhgXQ=" crossorigin="anonymous"></script>
+<script>
+    function readURL(input) {
+    if (input.files && input.files[0]) {
+        var reader = new FileReader();
+
+        reader.onload = function (e) {
+            $('#img').attr('src', e.target.result);
+            $('#img').removeClass('hideImage').addClass('showImage');
+        }
+
+        reader.readAsDataURL(input.files[0]);
+    }
+}
+
+$("#id_imagefile").change(function(){
+    readURL(this);
+});
+</script>
+    </body>
+
+</html>
